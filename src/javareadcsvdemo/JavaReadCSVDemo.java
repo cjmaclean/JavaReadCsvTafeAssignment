@@ -35,9 +35,6 @@ public class JavaReadCSVDemo {
         int width = 2;
         int height = 3;
 
-        //not sure why this doesn't work:
-        //String[][] table = new String[height][width];
-        //table[0] = {"", ""};
         String[][] table = {
             {"Name", "Favourite Colour"},
             {"John", "Green"},
@@ -51,9 +48,7 @@ public class JavaReadCSVDemo {
             System.out.println(" | ");
         }
         */
-        
-        String myCurrentDir = System.getProperty("user.dir") + java.io.File.separator + " ... " + System.getProperty("sun.java.command");
-        System.out.println("directory " + myCurrentDir);
+
         
         CSVReader csvReader = null;
         try {
