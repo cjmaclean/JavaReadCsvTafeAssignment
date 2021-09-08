@@ -11,27 +11,40 @@ package javareadcsvdemo;
  * data must be displayed in a GUI (a table is fine)
  *
  */
-
 // Open CSV - this program uses opecsv-3.8.jar from:
 // https://repo1.maven.org/maven2/com/opencsv/opencsv/3.8/opencsv-3.8.jar
 // Open CSV Licence: Apache
 // See: https://search.maven.org/artifact/com.opencsv/opencsv/3.8/jar
-
 import java.io.FileReader;
 import com.opencsv.CSVReader;
 import java.io.IOException;
 
-public class JavaReadCSVDemo {
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
-    public static void main(String[] args) {
-        // To do:
-        // After read from CSV file.
-        // Then display in GUI.
+public class JavaReadCSVDemo extends Application {
+
+    public void start(Stage stage) {
+        //Group root = new Group();
+        //Scene scene = new Scene(root);
         
-        // when changing to GUI, check for System.out methods,
-        // whether to leave them in or remove or replace them.
+        GridPane tablePane = loadCSVToGridPane();
+        Scene scene = new Scene(tablePane);
 
-        /*
+        stage.setTitle("CSV Contents");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public GridPane loadCSVToGridPane() {
+
+        GridPane gridPane = new GridPane();
+
         int width = 2;
         int height = 3;
 
@@ -42,14 +55,19 @@ public class JavaReadCSVDemo {
         };
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                System.out.print(" | ");
-                System.out.print(table[row][column]);
+                gridPane.add(new Label(table[row][column]), column, row);
             }
-            System.out.println(" | ");
         }
-        */
+        return gridPane;
+    }
 
-        
+    public static void main(String[] args) {
+        // To do:
+        // After read from CSV file.
+        // Then display in GUI.
+
+        // when changing to GUI, check for System.out methods,
+        // whether to leave them in or remove or replace them.
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReader(new FileReader("favourite_colours.csv"));
@@ -64,6 +82,8 @@ public class JavaReadCSVDemo {
         } catch (IOException e) {
             System.out.println("Couldn't read the table: " + e);
         }
+
+        launch(args);
     }
 
 }
