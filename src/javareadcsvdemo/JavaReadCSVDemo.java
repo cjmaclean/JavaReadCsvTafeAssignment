@@ -45,23 +45,6 @@ public class JavaReadCSVDemo extends Application {
 
         GridPane gridPane = new GridPane();
         
-        /*
-        int width = 2;
-        int height = 3;
-
-        String[][] table = {
-            {"Name", "Favourite Colour"},
-            {"John", "Green"},
-            {"Penny", "Blue"}
-        };
-        
-        for (int row = 0; row < height; row++) {
-            for (int column = 0; column < width; column++) {
-                gridPane.add(new Label(table[row][column]), column, row);
-            }
-        }
-        */
-
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReader(new FileReader("favourite_colours.csv"));
@@ -72,11 +55,8 @@ public class JavaReadCSVDemo extends Application {
                 int column = 0;
                 for (String cell : csvRow) {
                     gridPane.add(new Label(cell), column, row);
-                    System.out.print(" | ");
-                    System.out.print(cell);
                     column++;
                 }
-                System.out.println(" | ");
                 row++;
             }
         } catch (IOException e) {
@@ -87,12 +67,6 @@ public class JavaReadCSVDemo extends Application {
     }
 
     public static void main(String[] args) {
-        // To do:
-        // After read from CSV file.
-        // Then display in GUI.
-
-        // when changing to GUI, check for System.out methods,
-        // whether to leave them in or remove or replace them.
         launch(args);
     }
 
