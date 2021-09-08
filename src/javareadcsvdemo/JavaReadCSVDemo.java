@@ -11,16 +11,27 @@ package javareadcsvdemo;
  * data must be displayed in a GUI (a table is fine)
  *
  */
+
+// Open CSV - this program uses opecsv-3.8.jar from:
+// https://repo1.maven.org/maven2/com/opencsv/opencsv/3.8/opencsv-3.8.jar
+// Open CSV Licence: Apache
+// See: https://search.maven.org/artifact/com.opencsv/opencsv/3.8/jar
+
+import java.io.FileReader;
+import com.opencsv.CSVReader;
+import java.io.IOException;
+
 public class JavaReadCSVDemo {
 
     public static void main(String[] args) {
-        // To do: print example data from array.
-        // Then read from CSV file.
+        // To do:
+        // After read from CSV file.
         // Then display in GUI.
+        
+        // when changing to GUI, check for System.out methods,
+        // whether to leave them in or remove or replace them.
 
-        String[][] salutation = {{"Mr. ", "Mrs. ", "Ms. "}, {"Kumar"}};
-        //Read more: https://www.java67.com/2014/10/how-to-create-and-initialize-two-dimensional-array-java-example.html#ixzz75ptfMUL8        
-
+        /*
         int width = 2;
         int height = 3;
 
@@ -38,6 +49,25 @@ public class JavaReadCSVDemo {
                 System.out.print(table[row][column]);
             }
             System.out.println(" | ");
+        }
+        */
+        
+        String myCurrentDir = System.getProperty("user.dir") + java.io.File.separator + " ... " + System.getProperty("sun.java.command");
+        System.out.println("directory " + myCurrentDir);
+        
+        CSVReader csvReader = null;
+        try {
+            csvReader = new CSVReader(new FileReader("favourite_colours.csv"));
+            String[] csvRow;
+            while ((csvRow = csvReader.readNext()) != null) {
+                for (String cell : csvRow) {
+                    System.out.print(" | ");
+                    System.out.print(cell);
+                }
+                System.out.println(" | ");
+            }
+        } catch (IOException e) {
+            System.out.println("Couldn't read the table: " + e);
         }
     }
 
