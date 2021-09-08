@@ -32,7 +32,7 @@ public class JavaReadCSVDemo extends Application {
     public void start(Stage stage) {
         //Group root = new Group();
         //Scene scene = new Scene(root);
-        
+
         GridPane tablePane = loadCSVToGridPane();
         Scene scene = new Scene(tablePane);
 
@@ -44,7 +44,8 @@ public class JavaReadCSVDemo extends Application {
     public GridPane loadCSVToGridPane() {
 
         GridPane gridPane = new GridPane();
-
+        
+        /*
         int width = 2;
         int height = 3;
 
@@ -53,11 +54,35 @@ public class JavaReadCSVDemo extends Application {
             {"John", "Green"},
             {"Penny", "Blue"}
         };
+        
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
                 gridPane.add(new Label(table[row][column]), column, row);
             }
         }
+        */
+
+        CSVReader csvReader = null;
+        try {
+            csvReader = new CSVReader(new FileReader("favourite_colours.csv"));
+            String[] csvRow;
+            
+            int row = 0;
+            while ((csvRow = csvReader.readNext()) != null) {
+                int column = 0;
+                for (String cell : csvRow) {
+                    gridPane.add(new Label(cell), column, row);
+                    System.out.print(" | ");
+                    System.out.print(cell);
+                    column++;
+                }
+                System.out.println(" | ");
+                row++;
+            }
+        } catch (IOException e) {
+            System.out.println("Couldn't read the table: " + e);
+        }
+
         return gridPane;
     }
 
@@ -68,21 +93,6 @@ public class JavaReadCSVDemo extends Application {
 
         // when changing to GUI, check for System.out methods,
         // whether to leave them in or remove or replace them.
-        CSVReader csvReader = null;
-        try {
-            csvReader = new CSVReader(new FileReader("favourite_colours.csv"));
-            String[] csvRow;
-            while ((csvRow = csvReader.readNext()) != null) {
-                for (String cell : csvRow) {
-                    System.out.print(" | ");
-                    System.out.print(cell);
-                }
-                System.out.println(" | ");
-            }
-        } catch (IOException e) {
-            System.out.println("Couldn't read the table: " + e);
-        }
-
         launch(args);
     }
 
