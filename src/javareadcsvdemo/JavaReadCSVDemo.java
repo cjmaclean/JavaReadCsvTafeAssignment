@@ -42,7 +42,7 @@ public class JavaReadCSVDemo extends Application {
         //Scene scene = new Scene(root);
 
         GridPane tablePane = loadCSVToGridPane();
-        Scene scene = new Scene(tablePane);
+        Scene scene = new Scene(tablePane, 600,450);
 
         stage.setTitle("CSV Contents");
         stage.setScene(scene);
