@@ -13,25 +13,22 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class Person {
 
-    // Works with both properties and plain strings. Demonstrating both,
-    // though we could just pick one.
-    private SimpleStringProperty name;
+    private String name;
     private String favouriteColour;
     private String secondFavouriteColour;
-    
 
     public Person(String name, String favouriteColour, String secondfavouriteColour) {
-        this.name = new SimpleStringProperty(name);
+        this.name = name;
         this.favouriteColour = favouriteColour;
         this.secondFavouriteColour = secondfavouriteColour;
     }
 
     public String getName() {
-        return name.get();
+        return name;
     }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
     public String getFavouriteColour() {
