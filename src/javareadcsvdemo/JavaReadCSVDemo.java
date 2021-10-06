@@ -60,7 +60,8 @@ public class JavaReadCSVDemo extends Application {
         TableColumn column3 = new TableColumn(headerData.getSecondFavouriteColour());
 
         table.getColumns().addAll(column1, column2, column3);
-        table.setPrefWidth(400);
+        table.setPrefWidth(320);
+        
 
         column1.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
         column2.setCellValueFactory(new PropertyValueFactory<Person, String>("favouriteColour"));
