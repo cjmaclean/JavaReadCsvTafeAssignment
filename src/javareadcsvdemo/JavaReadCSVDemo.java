@@ -30,6 +30,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -38,13 +39,23 @@ import javafx.stage.Stage;
 public class JavaReadCSVDemo extends Application {
 
     private TableView table = new TableView();
-    
+
+    @Override
     public void start(Stage stage) {
         //Group root = new Group();
         //Scene scene = new Scene(root);
 
-        GridPane tablePane = loadCSVToGridPane();
-        Scene scene = new Scene(tablePane, 600,450);
+        //GridPane tablePane = loadCSVToGridPane();
+        Group root = new Group(table);
+        Scene scene = new Scene(root, 600, 450);
+
+        table.setEditable(true);
+
+        TableColumn column1 = new TableColumn("A1");
+        TableColumn column2 = new TableColumn("B1");
+        TableColumn column3 = new TableColumn("C1");
+
+        table.getColumns().addAll(column1, column2, column3);
 
         stage.setTitle("CSV Contents");
         stage.setScene(scene);
@@ -59,10 +70,10 @@ public class JavaReadCSVDemo extends Application {
         try {
             FileWriter fileWriter = new FileWriter(saveFileName);
             CSVWriter csvWriter = new CSVWriter(fileWriter);
-            String[] topLine = {"Hi", "There"} ;
+            String[] topLine = {"Hi", "There"};
             csvWriter.writeNext(topLine, true);
-            csvWriter.writeNext(new String[] {"1","2"}, true);
-            csvWriter.writeNext(new String[] {"3","Four 4"},true);
+            csvWriter.writeNext(new String[]{"1", "2"}, true);
+            csvWriter.writeNext(new String[]{"3", "Four 4"}, true);
             csvWriter.close();
             fileWriter.close();
             System.out.println("good: javareadcsvdemo.JavaReadCSVDemo.saveCSV()");
