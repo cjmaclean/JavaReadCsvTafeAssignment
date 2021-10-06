@@ -87,7 +87,7 @@ public class JavaReadCSVDemo extends Application {
         Label titleLabel = new Label("Table");
         titleLabel.setFont(new Font("Arial", 18));
         vbox.getChildren().add(titleLabel);
-        
+
         // Load from file and save to working copy. Add it for display
         loadTable(initFileName, headers, data);
         saveCSV(workingFileName, headers, data);
@@ -143,24 +143,27 @@ public class JavaReadCSVDemo extends Application {
     // Loads header row and a table of Person data, into the given ArrayList and ObservableList
     public void loadCSVToHeadersAndData(String fileName, ArrayList<String> headerList, ObservableList<Person> dataList) {
         dataList.clear();
+
+        //set default headers
+        headerList.clear();
+        headerList.add("_Name");
+        headerList.add("_Favourite Colour");
+        headerList.add("_Second Favourite Colour");
+
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReader(new FileReader(fileName));
             String[] csvRow;
 
             csvRow = csvReader.readNext(); // header row
-            if (csvRow.length == 3) {
 
+            if (csvRow != null && csvRow.length == 3) {
                 headerList.clear();
                 headerList.add(csvRow[0]);
                 headerList.add(csvRow[1]);
                 headerList.add(csvRow[2]);
             } else {
                 // use default header row if header is invalid
-                headerList.clear();
-                headerList.add("_Name");
-                headerList.add("_Favourite Colour");
-                headerList.add("_Second Favourite Colour");
             }
             while ((csvRow = csvReader.readNext()) != null) {
                 if (csvRow.length == 3) {
