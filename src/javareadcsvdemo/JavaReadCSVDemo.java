@@ -45,26 +45,22 @@ import javafx.stage.Stage;
 public class JavaReadCSVDemo extends Application {
 
     private TableView table = new TableView();
-    private ObservableList<Person> data;
+    private ObservableList<Person> data = FXCollections.observableArrayList();
+    private Person headerData = new Person("_Name", "_Favourite Colour", "_Second Favourite Colour");
 
-    public void initialiseTable() {
+    public void loadTable(String fileName) {
+
+        loadCSVToDataAndHeader(fileName);
 
         table.setEditable(true);
-        TableColumn column1 = new TableColumn("Name");
-        TableColumn column2 = new TableColumn("Favourite Colour");
-        TableColumn column3 = new TableColumn("Second Favourite Colour");
-        TableColumn column4 = new TableColumn("4");
-        TableColumn column5 = new TableColumn("5");
-        TableColumn column6 = new TableColumn("6");
-        table.getColumns().addAll(column1, column2, column3, column4, column5, column6);
 
-        data = FXCollections.observableArrayList(
-                // empty
-                
-                // example entries:
-                // new Person("Fred", "Black", "White"),
-                // new Person("Penny", "Green", "Blue")
-        );
+        table.getColumns().clear();
+        TableColumn column1 = new TableColumn(headerData.getName());
+        TableColumn column2 = new TableColumn(headerData.getFavouriteColour());
+        TableColumn column3 = new TableColumn(headerData.getSecondFavouriteColour());
+
+        table.getColumns().addAll(column1, column2, column3);
+        table.setPrefWidth(400);
 
         column1.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
         column2.setCellValueFactory(new PropertyValueFactory<Person, String>("favouriteColour"));
@@ -72,6 +68,9 @@ public class JavaReadCSVDemo extends Application {
 
         table.setItems(data);
     }
+
+    String initFileName = "favourite_colours.csv";
+    String workingFileName = "test.csv";
 
     @Override
     public void start(Stage stage) {
@@ -90,11 +89,12 @@ public class JavaReadCSVDemo extends Application {
 
         vbox.getChildren().add(titleLabel);
 
-        initialiseTable();
-        loadCSVToData(initFileName);
+        // Load from file and save to working copy.
+        loadTable(initFileName);
+        saveCSV(workingFileName);
         vbox.getChildren().add(table);
 
-        Button addButton = new Button("Add");
+        Button addButton = new Button("Add Bob");
         addButton.setOnAction((ActionEvent event) -> {
             data.add(new Person("Bob", "Red", "White"));
         });
@@ -102,13 +102,13 @@ public class JavaReadCSVDemo extends Application {
 
         Button loadButton = new Button("Load");
         loadButton.setOnAction((ActionEvent event) -> {
-            loadCSVToData(workingFileName);
+            loadTable(workingFileName);
         });
         vbox.getChildren().add(loadButton);
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction((ActionEvent event) -> {
-            saveCSV();
+            saveCSV(workingFileName);
         });
         vbox.getChildren().add(saveButton);
 
@@ -117,18 +117,16 @@ public class JavaReadCSVDemo extends Application {
         stage.show();
     }
 
-    String initFileName = "favourite_colours.csv";
-
-    String workingFileName = "test.csv";
-
-    public void saveCSV() {
+    public void saveCSV(String fileName) {
         try {
-            FileWriter fileWriter = new FileWriter(workingFileName);
+            FileWriter fileWriter = new FileWriter(fileName);
             CSVWriter csvWriter = new CSVWriter(fileWriter);
-            String[] topLine = {"Hi", "There"};
+            String[] topLine = {headerData.getName(), headerData.getFavouriteColour(), headerData.getSecondFavouriteColour()};
             csvWriter.writeNext(topLine, true);
-            csvWriter.writeNext(new String[]{"1", "2"}, true);
-            csvWriter.writeNext(new String[]{"3", "Four 4"}, true);
+            for (Person person : data) {
+                String[] rowStrings = new String[]{person.getName(), person.getFavouriteColour(), person.getSecondFavouriteColour()};
+                csvWriter.writeNext(rowStrings, true);
+            }
             csvWriter.close();
             fileWriter.close();
             System.out.println("good: javareadcsvdemo.JavaReadCSVDemo.saveCSV()");
@@ -137,15 +135,20 @@ public class JavaReadCSVDemo extends Application {
         }
     }
 
-    public void loadCSVToData(String fileName) {
+    public void loadCSVToDataAndHeader(String fileName) {
 
+        data.clear();
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReader(new FileReader(fileName));
             String[] csvRow;
 
-            csvRow = csvReader.readNext(); // skip over header row
-
+            csvRow = csvReader.readNext(); // header row
+            if (csvRow.length == 3) {
+                headerData = new Person(csvRow[0], csvRow[1], csvRow[2]);
+            } else {
+                // use default header row if header is invalid
+            }
             while ((csvRow = csvReader.readNext()) != null) {
 
                 if (csvRow.length == 3) {
