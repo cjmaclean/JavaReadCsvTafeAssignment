@@ -24,8 +24,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,12 +36,39 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class JavaReadCSVDemo extends Application {
 
     private TableView table = new TableView();
+    private ObservableList<Person> data;
+
+    public void fillTable() {
+
+        table.setEditable(true);
+        TableColumn column1 = new TableColumn("Name");
+        TableColumn column2 = new TableColumn("Favourite Colour");
+        TableColumn column3 = new TableColumn("Second Favourite Colour");
+        TableColumn column4 = new TableColumn("4");
+        TableColumn column5 = new TableColumn("5");
+        TableColumn column6 = new TableColumn("6");
+        table.getColumns().addAll(column1, column2, column3, column4, column5, column6);
+
+        data = FXCollections.observableArrayList(
+                new Person("Fred", "Black", "White"),
+                new Person("Penny", "Green", "Blue")
+        );
+
+        column1.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
+        column2.setCellValueFactory(new PropertyValueFactory<Person, String>("favouriteColour"));
+        column3.setCellValueFactory(new PropertyValueFactory<Person, String>("secondFavouriteColour"));
+
+        table.setItems(data);
+    }
 
     @Override
     public void start(Stage stage) {
@@ -46,16 +76,28 @@ public class JavaReadCSVDemo extends Application {
         //Scene scene = new Scene(root);
 
         //GridPane tablePane = loadCSVToGridPane();
-        Group root = new Group(table);
-        Scene scene = new Scene(root, 600, 450);
+        VBox vbox = new VBox();
+        vbox.setSpacing(8);
+        vbox.setPadding(new Insets(5, 0, 0, 5));
+        Group root = new Group(vbox);
+        Scene scene = new Scene(root, 640, 512);
 
-        table.setEditable(true);
+        Label titleLabel = new Label("Table");
+        titleLabel.setFont(new Font("Arial", 18));
 
-        TableColumn column1 = new TableColumn("A1");
-        TableColumn column2 = new TableColumn("B1");
-        TableColumn column3 = new TableColumn("C1");
+        vbox.getChildren().add(titleLabel);
 
-        table.getColumns().addAll(column1, column2, column3);
+        fillTable();
+        vbox.getChildren().add(table);
+
+        Button addButton = new Button("Add");
+        addButton.setOnAction((ActionEvent event) -> {
+            data.add(new Person("Bob", "Red", "White"));
+//                fileNameLabel.setText("Saving...");
+//                saveCSV();
+//                fileNameLabel.setText("Saving... progressed");
+        });
+        vbox.getChildren().add(addButton);
 
         stage.setTitle("CSV Contents");
         stage.setScene(scene);
