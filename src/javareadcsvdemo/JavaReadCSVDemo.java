@@ -47,7 +47,7 @@ public class JavaReadCSVDemo extends Application {
     private TableView table = new TableView();
     private ObservableList<Person> data;
 
-    public void fillTable() {
+    public void initialiseTable() {
 
         table.setEditable(true);
         TableColumn column1 = new TableColumn("Name");
@@ -59,8 +59,11 @@ public class JavaReadCSVDemo extends Application {
         table.getColumns().addAll(column1, column2, column3, column4, column5, column6);
 
         data = FXCollections.observableArrayList(
-                new Person("Fred", "Black", "White"),
-                new Person("Penny", "Green", "Blue")
+                // empty
+                
+                // example entries:
+                // new Person("Fred", "Black", "White"),
+                // new Person("Penny", "Green", "Blue")
         );
 
         column1.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
@@ -87,30 +90,40 @@ public class JavaReadCSVDemo extends Application {
 
         vbox.getChildren().add(titleLabel);
 
-        fillTable();
+        initialiseTable();
+        loadCSVToData(initFileName);
         vbox.getChildren().add(table);
 
         Button addButton = new Button("Add");
         addButton.setOnAction((ActionEvent event) -> {
             data.add(new Person("Bob", "Red", "White"));
-//                fileNameLabel.setText("Saving...");
-//                saveCSV();
-//                fileNameLabel.setText("Saving... progressed");
         });
         vbox.getChildren().add(addButton);
+
+        Button loadButton = new Button("Load");
+        loadButton.setOnAction((ActionEvent event) -> {
+            loadCSVToData(workingFileName);
+        });
+        vbox.getChildren().add(loadButton);
+
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction((ActionEvent event) -> {
+            saveCSV();
+        });
+        vbox.getChildren().add(saveButton);
 
         stage.setTitle("CSV Contents");
         stage.setScene(scene);
         stage.show();
     }
 
-    String fileName = "favourite_colours.csv";
+    String initFileName = "favourite_colours.csv";
 
-    String saveFileName = "test.csv";
+    String workingFileName = "test.csv";
 
     public void saveCSV() {
         try {
-            FileWriter fileWriter = new FileWriter(saveFileName);
+            FileWriter fileWriter = new FileWriter(workingFileName);
             CSVWriter csvWriter = new CSVWriter(fileWriter);
             String[] topLine = {"Hi", "There"};
             csvWriter.writeNext(topLine, true);
@@ -124,58 +137,28 @@ public class JavaReadCSVDemo extends Application {
         }
     }
 
-    public GridPane loadCSVToGridPane() {
-
-        GridPane gridPane = new GridPane();
+    public void loadCSVToData(String fileName) {
 
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReader(new FileReader(fileName));
             String[] csvRow;
 
-            int row = 0;
+            csvRow = csvReader.readNext(); // skip over header row
+
             while ((csvRow = csvReader.readNext()) != null) {
-                int column = 0;
-                for (String cell : csvRow) {
-                    // Try putting text instead of Label.
-                    gridPane.add(new TextField(cell), column, row);
-                    column++;
+
+                if (csvRow.length == 3) {
+                    data.add(new Person(csvRow[0], csvRow[1], csvRow[2]));
+                } else {
+                    data.add(new Person("invalid entry", "", ""));
                 }
-                row++;
             }
-
-            int csvRows = row;
-
-            gridPane.add(new Label(" "), 0, csvRows);
-
-            Button saveButton = new Button("Save");
-            Button loadButton = new Button("Load");
-            gridPane.add(saveButton, 0, csvRows + 1);
-            gridPane.add(loadButton, 1, csvRows + 1);
-
-            Label fileNameLabel = new Label("File name: ");
-
-//            saveButton.setOnAction(new EventHandler<ActionEvent>() {
-//                @Override
-//                public void handle(ActionEvent event) {
-//                    fileNameLabel.setText("Saving...");
-//                }
-//            });
-            saveButton.setOnAction((ActionEvent event) -> {
-                fileNameLabel.setText("Saving...");
-                saveCSV();
-                fileNameLabel.setText("Saving... progressed");
-            });
-
-            ///fileNameLabel.
-            gridPane.add(fileNameLabel, 2, csvRows + 1);
-            gridPane.add(new TextField("filename"), 3, csvRows + 1);
 
         } catch (IOException e) {
             System.out.println("Couldn't read the table: " + e);
         }
 
-        return gridPane;
     }
 
     public static void main(String[] args) {
