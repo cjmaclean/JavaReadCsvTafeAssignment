@@ -37,6 +37,8 @@ import javafx.stage.Stage;
 
 public class JavaReadCSVDemo extends Application {
 
+    private TableView table = new TableView();
+    
     public void start(Stage stage) {
         //Group root = new Group();
         //Scene scene = new Scene(root);
