@@ -1,15 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package javareadcsvdemo;
 
-import javafx.beans.property.SimpleStringProperty;
+package javareadcsvdemo;
 
 /**
  *
- * @author 30039802
+ * @author 30039802 Caspian Maclean
+ * 
+ * Person - stores a person's name and favourite colours.
+ * 
  */
 public class Person {
 
